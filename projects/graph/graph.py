@@ -97,14 +97,29 @@ class Graph:
             # 11. when path[-1] is your target, stop and return the path
 
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, passed=set()):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        pass  # TODO
+        # mark this vertex as passed
+        passed.add(starting_vertex)
+        print(starting_vertex)
+        #for each neighbor
+        neighbors = self.get_neighbors(starting_vertex)
+
+        # if len(neighbors) == 0:
+        #     return
+
+        for neighbor in neighbors:
+        ## if its not passed
+            if neighbor not in passed:
+            ## recurse on the neighbor
+                self.dft_recursive(neighbor, passed)
+        
+        # return None
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -112,7 +127,40 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        #start with a queue
+        q = Queue()
+        # make a set to track if it's passed
+        passed = set()
+
+        path = [starting_vertex]
+        q.enqueue(path)
+
+        # go to node and find if it's in the graph or not
+        #while q isnt empty
+        while q.size():
+        #dequeue path at front of line (starting_v)
+            current_path = q.dequeue()
+            #need id of node
+            current_node = current_path[-1]
+
+        ##  if this node is targt node (destination_v)
+            if current_node == destination_vertex:
+        # return True (current_path because we want to return a list)
+                return current_path
+
+        ## if not passed:
+            if current_node not in passed:
+            #mark as passed
+                passed.add(current_node)
+            # get neighbors
+                neighbors = self.get_neighbors(current_node)
+            # for each neighbor
+                for neighbor in neighbors:
+
+            # add to q
+                    q.enqueue(current_path + [neighbor])
+
+
 
     def dfs(self, starting_vertex, destination_vertex):
         """
