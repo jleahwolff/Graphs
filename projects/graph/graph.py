@@ -13,33 +13,89 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        pass  # TODO
+        self.vertices[vertex_id] = set()
 
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        self.vertices[v1].add(v2)
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
+        Return all as a SET
+
         """
-        pass  # TODO
+        return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        #Make Queue
+        q = Queue()
+        # enquenue our starting node
+        q.enqueue(starting_vertex)
+
+        #make a set to track if we've been here before
+        passed = set()
+
+        #While our queue isn't empty
+        while q.size() > 0:
+        ##  dequeue whatever is @ front of the line (current_node)
+            current_node = q.dequeue()
+        ## if we haven't passed over this node yet
+            if current_node not in passed:
+            ##  mark as passed
+                passed.add(current_node)
+            ##  gets its neighbors
+            ## 
+                neighbors = self.get_neighbors(current_node)
+            ##  for each of the neighbors, 
+                for neighbor in neighbors:
+                ## add to queue
+                    q.enqueue(neighbor)
+
 
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
+        ===== DFS =====
         """
-        pass  # TODO
+    ## Create a stack
+        s = Stack()
+    #1. Starting Node + Target Node
+    # 2. Add [starting_node] to path, and push it to stack
+        s.push(starting_vertex)
+    ## make a set to track if we've been here before
+        passed = set()
+    ## while our stack isn't empty
+        while s.size():
+        # 3. pop last item from stack (current node)
+            current_node = s.pop()
+        ## if we haven't visited this vertex before...
+            if current_node not in passed:
+            ## run function / print
+                print(current_node)
+            ## mark as passed
+                passed.add(current_node)
+            ## get its neighbors
+                neighbors = self.get_neighbors(current_node)
+            # 4. check the last item in the path, for instance [1, 2, 4, 6, 7]... check 7 (path[-1])
+            # 5. add path[-1] to your visited
+            # 6. get neighbors of path[-1]
+            # 7. add to your path, so for each neighbor, create a path copy, add the neighbor to end of path
+            #for each neighbor
+                for neighbor in neighbors:
+            # 8. push your new path to your stack
+                    s.push(neighbor)
+            # 9. for instance, if neighbors of 7 are 10, 12, 13, 6, but 6 has been visited
+            # 10. [1, 2, 4, 6, 7, 10], [1, 2, 4, 6, 7, 12], [1, 2, 4, 6, 7, 13] will be added to stack
+            # 11. when path[-1] is your target, stop and return the path
+
 
     def dft_recursive(self, starting_vertex):
         """
