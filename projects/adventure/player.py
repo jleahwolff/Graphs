@@ -1,3 +1,8 @@
+#Player(starting_room)
+#player.travel(direction, show_rooms=False)
+    #get_room_in_direction(direction)
+    #if
+
 class Player:
     def __init__(self, starting_room):
         self.current_room = starting_room
