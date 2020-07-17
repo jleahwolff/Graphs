@@ -12,9 +12,9 @@ world = World()
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt" 
+map_file = "maps/test_loop.txt" 
 # map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -42,7 +42,7 @@ def traverse_adv():
     visited = []
     go_back = []
     world_map = {}
-    # print("first room", player.current_room.id)
+    # print("first room", player.current_room.id) 
 
     #find first room... 
     #put it in the stack
@@ -54,83 +54,72 @@ def traverse_adv():
     # find the exits (get)
     # populate exits on world map current : {n: "?"}
 
-    print("THE WORLD MAP: ", world_map) # ----- starts empty
+    print("THE 🌎: ", world_map) # ----- starts empty
     # append "next room" to stack
     # begin loop again
     while len(visited) != len(room_graph):
         found = "nothing"
-        print("found", found)
-
-        #Pop + set to current
+    
+        #Pop it and set it to current
         current = stack.pop()
+        # print("CURRENT ROOM IS: ", current)
 
-
-        #find exits
+        #Explore exits
         exits = player.current_room.get_exits()
-        print("CURRENT ROOM: ", current, ", EXIT OPTIONS: ", exits)
-
-        #check if its been visited
+        print("CURRENT: ", current , "EXITS: ", exits)
+    
+        #check if it's visited 
         if current not in visited:
             visited.append(current)
-            print("VISITED ROOM COUNT: ", len(visited))
+            print("ROOMS VISITED:", visited)
 
-        #ADD TO BACK TRACK list!!! 
+        #always add to go_back!!! 
         go_back.append(current)
-        print("BEHIND ME IS: ", go_back)
+        print("GOING ↩: ", go_back)
 
-        #Use Enumerate: It allows us to loop over something and have an automatic counter. 
-        #add entryway
-        if current not in world_map:
+        #Add entry
+        if current not in world_map:    
             world_map[current] = {i[1]: "?" for i in enumerate(exits)}
-        print("MY WORLD CONSISTS OF: ", len(world_map), "ROOM")
+        
+        #print("my world_map", world_map)
 
+        #pick first exit with value of "?"from world
+        for item in world_map[current].items():
+            #print("items IS", item)
 
-    # Update path with exit coordinate
-    # Update world ----> current: {n: 1}
-    #Create next entry for the "next room", where we are now
-    # world : {0:{n:1...}, 1:{s:0}}     n is the exit and s is the opposite
-    # Choose an exit, first key with value == "?"
-    # Travel to next room through that exit -- "n"
-    #Create logic to discover the opposite of exit
+            if item[1] == '?':
+                found = "found"
+                exit = item[0]
+                #print("ONE MORE ?", exit)
+                #logic to discover opposite
+                if exit == "n" :
+                    opposite = "s"
+                if exit == "s" :
+                    opposite = "n"
+                if exit == "e" :
+                    opposite = "w"
+                if exit == "w" :
+                    opposite = "e"
+                break
 
+        if found == "found":
+            pass
 
-    #pick first exit w value "?" -> from world_map
-    for item in world_map[current].items():
-        print("items IS", item)
+        else:
+            
+            # print("NO QUESTION MARKS") -> LONNNGGG
+            
+            
+            #no questions marks, go baccckk
+            value = go_back.pop() #gives me the current room
+            before = go_back.pop()
+            #print("value is ", value, "and before is ", before)
 
-        if item[1] == '?':
-            found = 'found'
-            exit = item[0]
-            # print("exit item: ", exit)
-
-            if exit == "n":
-                opposite = "s",
-            if exit == "s":
-                opposite = "n",
-            if exit == "e":
-                opposite = "w",
-            if exit == "w":
-                opposite = "e"
-            break
-
-    if found == "found":
-        pass
-
-
-    else:
-        print("Not a ?")
-        print("go_back list", go_back)
-
-        #no ?, go back
-        value = go_back.pop()
-        before = go_back.pop()
-        print("current room: ", value, "before: ", before)
-
-        for key in world_map[value]:
-            print("my 🔑", key)
-            if world_map[value][key] == before:
-                exit = key
-
+            for key in world_map[value]:
+                #print("whats my key", key)
+                if world_map[value][key] == before:
+                    exit = key
+            
 
         #logic to discover opposite
         if exit == "n" :
@@ -231,6 +220,10 @@ if len(visited_rooms) == len(room_graph):
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+
+
+
+    # FIRST  ----- ATTEMPT W/O testing
     # #print("traversal path right now", traversal_path)
     # print("current room is ", player.current_room.id)
     # #keep track of visited node, has to be len of 500
