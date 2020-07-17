@@ -12,7 +12,7 @@ world = World()
 # You may uncomment the smaller graphs for development and testing purposes.
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
+# map_file = "maps/test_loop.txt" 
 # map_file = "maps/test_loop_fork.txt"
 map_file = "maps/main_maze.txt"
 
@@ -30,13 +30,14 @@ player = Player(world.starting_room)
 # opposites = { 'n': 's', 'e': 'w', 'w': 'e', 's': 'n' }
 
 # Fill this out with directions to walk
-# traversal_path = ['n', 'n']
-traversal_path = []
+traversal_path = ['n', 'n']
+# traversal_path = []
 print("TYPE of room", type(room_graph[0][1]))
 
 # start by initiating empty list of movements to keep track
 # Stack, rooms visited, returning to same room, and full map object.
 def traverse_adv():
+
     stack = []
     visited = []
     go_back = []
@@ -53,33 +54,35 @@ def traverse_adv():
     # find the exits (get)
     # populate exits on world map current : {n: "?"}
 
+    print("THE WORLD MAP: ", world_map) # ----- starts empty
     # append "next room" to stack
     # begin loop again
     while len(visited) != len(room_graph):
         found = "nothing"
-        # print("found", found)
+        print("found", found)
 
         #Pop + set to current
         current = stack.pop()
 
+
         #find exits
         exits = player.current_room.get_exits()
-        print("current room: ", current, "exit directions: ", exits)
+        print("CURRENT ROOM: ", current, ", EXIT OPTIONS: ", exits)
 
         #check if its been visited
         if current not in visited:
             visited.append(current)
-            print("visited rooms: ", visited)
+            print("VISITED ROOM COUNT: ", len(visited))
 
         #ADD TO BACK TRACK list!!! 
         go_back.append(current)
-        print("backtracked list: ", go_back)
+        print("BEHIND ME IS: ", go_back)
 
         #Use Enumerate: It allows us to loop over something and have an automatic counter. 
         #add entryway
         if current not in world_map:
-            world_map[current] = {i[1] : "?" for i in enumerate(exits)}
-        print("my world: ", world_map)
+            world_map[current] = {i[1]: "?" for i in enumerate(exits)}
+        print("MY WORLD CONSISTS OF: ", len(world_map), "ROOM")
 
 
     # Update path with exit coordinate
@@ -98,7 +101,7 @@ def traverse_adv():
         if item[1] == '?':
             found = 'found'
             exit = item[0]
-            print("exit item: ", exit)
+            # print("exit item: ", exit)
 
             if exit == "n":
                 opposite = "s",
@@ -109,6 +112,7 @@ def traverse_adv():
             if exit == "w":
                 opposite = "e"
             break
+
     if found == "found":
         pass
 
@@ -164,13 +168,8 @@ def traverse_adv():
             pass
             #print("do nothing")
         else:
-            world_map[current].update({exit:next_room})
+            world_map[current].update({exit: next_room})
         
-        #add next entry to my map 
-        #get exits
-        #exits = player.current_room.get_exits()
-        #print("exits from room", next_room , exits)
-
         #Add entry
         if next_room in world_map:
             pass
@@ -193,15 +192,31 @@ def traverse_adv():
 
         #print("world now", world_map)
 
-        
-        
-        
+        #while len(stack) > 0:
+
+
+
+
+# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+
+
+#######
+# UNCOMMENT TO WALK AROUND
+#######
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
 
 traverse_adv()
 print("ADVENTURE LENGTH: ", len(traversal_path))
 
-# ----------------------------------------------------------------------------------
-# ----------------------------------------------------------------------------------
 # TRAVERSAL TEST
 visited_rooms = set()
 player.current_room = world.starting_room
@@ -216,22 +231,6 @@ if len(visited_rooms) == len(room_graph):
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-
-
-#######
-# UNCOMMENT TO WALK AROUND
-#######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
-
-
     # #print("traversal path right now", traversal_path)
     # print("current room is ", player.current_room.id)
     # #keep track of visited node, has to be len of 500
